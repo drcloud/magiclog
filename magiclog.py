@@ -66,7 +66,7 @@ class Configuration(namedtuple('Configuration', 'syslog stderr extended')):
         """
         level = norm_level(level)
         if syslog is None and stderr is None:
-            if sys.stderr.isatty():
+            if sys.stderr.isatty() or syslog_path() is None:
                 log.info('Defaulting to STDERR logging.')
                 syslog, stderr = None, (level or logging.INFO)
                 if extended is None:
@@ -85,7 +85,7 @@ def configure_handlers(logger, syslog=None, stderr=None, extended=False):
         if stderr != logging.NOTSET:
             stderr_handler.level = stderr
     if syslog is not None:
-        dev = '/dev/log' if os.path.exists('/dev/log') else '/var/run/syslog'
+        dev = syslog_path()
         cmd = os.path.basename(sys.argv[0])
         app = __main__.__name__
         app = cmd if app in ['__main__'] else app
@@ -96,6 +96,15 @@ def configure_handlers(logger, syslog=None, stderr=None, extended=False):
             syslog_handler.level = syslog
     clear_handlers(logger)
     logger.handlers = [h for h in [stderr_handler, syslog_handler] if h]
+
+
+syslog_paths = ['/dev/log', '/var/run/syslog']
+
+
+def syslog_path():
+    for path in syslog_paths:
+        if os.path.exists(path):
+            return path
 
 
 def set_normed_level(logger, level):
