@@ -9,6 +9,12 @@ import textwrap
 from types import ModuleType
 
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 def logger(ref=1):
     """Finds a module logger.
 
@@ -130,19 +136,26 @@ def extend(logger):
     return logger
 
 
+try:
+    _levels = dict((k.lower(), v) for k, v in logging._levelNames.items()
+                   if isinstance(k, basestring))
+except AttributeError:
+    _levels = dict((k.lower(), v) for k, v in logging._nameToLevel.items()
+                   if isinstance(k, basestring))
+
+
 def norm_level(level):
     if level is None:
         return level
     if isinstance(level, basestring):
-        return logging._levelNames[level.upper()]
+        return _levels[level.lower()]
     else:
-        logging._levelNames[level]                         # Raise if not found
+        assert level in _levels.values()
         return level
 
 
 def levels():
-    return {_.lower() for _ in logging._levelNames.keys()
-            if isinstance(_, basestring)}
+    return set(_levels.keys())
 
 
 def clear_handlers(root_of_loggers):
