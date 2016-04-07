@@ -4,7 +4,7 @@ from setuptools import setup
 
 
 conf = dict(name='magiclog',
-            version='1.0.1',
+            version='0.99',
             author='Jason Dusek',
             author_email='jason.dusek@gmail.com',
             url='https://github.com/drcloud/magiclog',
@@ -15,9 +15,13 @@ conf = dict(name='magiclog',
             py_modules=['magiclog'],
             classifiers=['Environment :: Console',
                          'Intended Audience :: Developers',
+                         'License :: OSI Approved :: MIT License',
                          'Operating System :: Unix',
                          'Operating System :: POSIX',
                          'Programming Language :: Python',
+                         'Programming Language :: Python :: 2.6',
+                         'Programming Language :: Python :: 2.7',
+                         'Programming Language :: Python :: 3.5',
                          'Topic :: Software Development',
                          'Development Status :: 4 - Beta'])
 
