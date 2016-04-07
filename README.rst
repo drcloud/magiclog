@@ -1,6 +1,6 @@
-===================================
-``magiclog``, easier than ``print``
-===================================
+============
+``magiclog``
+============
 
 
 Printing log messages is easy but it makes certain kinds of integrations hard:
@@ -16,6 +16,7 @@ the right thing for libraries, command line tools and simple scripts. It's as
 easy as:
 
 .. code:: python
+
     from magiclog import log
 
 
@@ -45,6 +46,7 @@ situation. You can use ``logger`` to retrieve and configure the loggers of
 other modules, too.
 
 .. code:: python
+
     import magiclog
     from magiclog import log
 
