@@ -2,6 +2,8 @@
 ``magiclog``
 ============
 
+.. image:: https://travis-ci.org/drcloud/magiclog.svg?branch=master
+    :target: https://travis-ci.org/drcloud/magiclog
 
 Printing log messages is easy but it makes certain kinds of integrations hard:
 
