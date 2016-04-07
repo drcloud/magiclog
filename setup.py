@@ -4,10 +4,10 @@ from setuptools import setup
 
 
 conf = dict(name='magiclog',
-            version='1.0.0',
-            author = 'Jason Dusek',
-            author_email = 'jason.dusek@gmail.com',
-            url = 'https://github.com/drcloud/magiclog',
+            version='1.0.1',
+            author='Jason Dusek',
+            author_email='jason.dusek@gmail.com',
+            url='https://github.com/drcloud/magiclog',
             install_requires=[],
             setup_requires=['pytest-runner', 'setuptools'],
             tests_require=['flake8', 'pytest', 'tox'],
