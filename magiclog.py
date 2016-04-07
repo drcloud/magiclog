@@ -70,7 +70,7 @@ class Configuration(namedtuple('Configuration', 'syslog stderr extended')):
                 log.info('Defaulting to STDERR logging.')
                 syslog, stderr = None, (level or logging.INFO)
                 if extended is None:
-                    extended = level <= logging.DEBUG
+                    extended = (level or 0) <= logging.DEBUG
             else:
                 log.info('Defaulting to logging with Syslog.')
                 syslog, stderr = (level or logging.WARNING), None
