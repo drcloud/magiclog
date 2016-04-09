@@ -6,7 +6,7 @@ import __main__
 import os
 import sys
 import textwrap
-from types import ModuleType
+from types import MethodType, ModuleType
 
 
 try:
@@ -140,7 +140,7 @@ def logclimber(height=1):             # http://stackoverflow.com/a/900404/48251
 
 
 def extend(logger):
-    logger.configure = configure
+    logger.configure = MethodType(configure, logger)
     logger.handlers += [_null_handler]
     return logger
 
