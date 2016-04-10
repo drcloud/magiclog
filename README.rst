@@ -4,6 +4,10 @@
 
 .. image:: https://travis-ci.org/drcloud/magiclog.svg?branch=master
     :target: https://travis-ci.org/drcloud/magiclog
+.. image:: https://img.shields.io/pypi/v/magiclog.svg
+    :target: https://pypi.python.org/pypi/magiclog
+.. image:: https://img.shields.io/pypi/dd/magiclog.svg
+    :target: https://pypi.python.org/pypi/magiclog
 
 ``magiclog`` simplifies application and library logging, allowing you to use
 loggers where you would use print statements without complicated setup or
