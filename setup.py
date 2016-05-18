@@ -4,11 +4,11 @@ from setuptools import setup
 
 
 conf = dict(name='magiclog',
-            version='0.99.2',
+            version='0.99.3',
             author='Jason Dusek',
             author_email='jason.dusek@gmail.com',
             url='https://github.com/drcloud/magiclog',
-            install_requires=[],
+            install_requires=['stackclimber'],
             setup_requires=['pytest-runner', 'setuptools'],
             tests_require=['flake8', 'pytest', 'tox'],
             description='Easy logger management for libraries and CLI tools.',
