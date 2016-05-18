@@ -8,6 +8,7 @@ import sys
 import textwrap
 from types import MethodType, ModuleType
 
+from setproctitle import getproctitle
 from stackclimber import stackclimber
 
 
@@ -88,9 +89,9 @@ def configure_handlers(logger, syslog=None, stderr=None, extended=False):
             stderr_handler.level = stderr
     if syslog is not None:
         dev = syslog_path()
-        cmd = os.path.basename(sys.argv[0])
+        procname = os.path.basename(getproctitle().split()[-1])
         app = __main__.__name__
-        app = cmd if app in ['__main__'] else app
+        app = procname if app in ['__main__'] else app
         fmt = app + '[%(process)d]: %(name)s %(funcName)s %(message)s'
         syslog_handler = logging.handlers.SysLogHandler(address=dev)
         syslog_handler.setFormatter(logging.Formatter(fmt=fmt))
