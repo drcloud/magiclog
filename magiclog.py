@@ -8,6 +8,8 @@ import sys
 import textwrap
 from types import MethodType, ModuleType
 
+from stackclimber import stackclimber
+
 
 try:
     basestring
@@ -15,7 +17,7 @@ except NameError:
     basestring = str
 
 
-def logger(ref=1):
+def logger(ref=0):
     """Finds a module logger.
 
     If the argument passed is a module, find the logger for that module using
@@ -30,7 +32,7 @@ def logger(ref=1):
         return extend(logging.getLogger(ref.__name__))
     if isinstance(ref, basestring):
         return extend(logging.getLogger(ref))
-    return extend(logclimber(ref))
+    return extend(logging.getLogger(stackclimber(ref+1)))
 
 
 def configure(logger=None, **kwargs):
@@ -120,23 +122,6 @@ def configure_stderr_format(stderr_handler, extended=False):
         fmt = logging.Formatter(fmt='%(asctime)s.%(msecs)03d %(message)s',
                                 datefmt='%H:%M:%S')
     stderr_handler.setFormatter(fmt)
-
-
-def logclimber(height=1):             # http://stackoverflow.com/a/900404/48251
-    """
-    Obtain a logger for the caller's module. Uses the inspect module to find
-    the caller's position in the module hierarchy. With the optional height
-    argument, logs for caller's caller, and so forth.
-    """
-    caller = inspect.stack()[height]
-    scope = caller[0].f_globals
-    path = scope['__name__'].split('__main__')[0].strip('.')
-    if path == '':
-        if scope['__package__']:
-            path = scope['__package__']
-        else:
-            path = os.path.basename(sys.argv[0]).split('.')[0]
-    return logging.getLogger(path)
 
 
 def extend(logger):
@@ -237,7 +222,7 @@ class ImportWrapper(ModuleType):
 
     def __getattr__(self, name):
         if name == 'log':
-            return logger(3)
+            return logger(1)
         return getattr(self._module, name)
 
 
