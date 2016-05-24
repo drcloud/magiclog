@@ -66,16 +66,16 @@ class Configuration(namedtuple('Configuration', 'syslog stderr extended')):
     def auto(cls, syslog=None, stderr=None, level=None, extended=None):
         """Tries to guess a sound logging configuration.
         """
-        level = norm_level(level)
+        level = norm_level(level) or logging.INFO
         if syslog is None and stderr is None:
             if sys.stderr.isatty() or syslog_path() is None:
                 log.info('Defaulting to STDERR logging.')
-                syslog, stderr = None, (level or logging.INFO)
+                syslog, stderr = None, level
                 if extended is None:
                     extended = (stderr or 0) <= logging.DEBUG
             else:
                 log.info('Defaulting to logging with Syslog.')
-                syslog, stderr = (level or logging.WARNING), None
+                syslog, stderr = level, None
         return cls(syslog=syslog, stderr=stderr, extended=extended)
 
 
