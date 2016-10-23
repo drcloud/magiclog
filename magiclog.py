@@ -4,6 +4,7 @@ import logging
 import logging.handlers
 import __main__
 import os
+import socket
 import sys
 import textwrap
 from types import MethodType, ModuleType
@@ -52,18 +53,20 @@ def configure(logger=None, **kwargs):
     configuration(logger)
 
 
-class Configuration(namedtuple('Configuration', 'syslog stderr extended')):
+class Configuration(namedtuple('Configuration',
+                               'syslog stderr extended server')):
     def __call__(self, logger):
         log.info('Applying config %s to logger: %s', self, logger.name)
         if isinstance(logger, basestring):
             logger = logging.getLogger(logger)
         syslog, stderr = norm_level(self.syslog), norm_level(self.stderr)
         configure_handlers(logger, syslog=syslog, stderr=stderr,
-                           extended=self.extended)
+                           extended=self.extended, server=self.server)
         set_normed_level(logger, min(_ for _ in [syslog, stderr] if _))
 
     @classmethod
-    def auto(cls, syslog=None, stderr=None, level=None, extended=None):
+    def auto(cls, syslog=None, stderr=None, level=None, extended=None,
+             server=None):
         """Tries to guess a sound logging configuration.
         """
         level = norm_level(level) or logging.INFO
@@ -76,10 +79,12 @@ class Configuration(namedtuple('Configuration', 'syslog stderr extended')):
             else:
                 log.info('Defaulting to logging with Syslog.')
                 syslog, stderr = level, None
-        return cls(syslog=syslog, stderr=stderr, extended=extended)
+        return cls(syslog=syslog, stderr=stderr, extended=extended,
+                   server=server)
 
 
-def configure_handlers(logger, syslog=None, stderr=None, extended=False):
+def configure_handlers(logger, syslog=None, stderr=None, extended=False,
+                       server=None):
     stderr_handler, syslog_handler = None, None
     if stderr is not None:
         stderr_handler = logging.StreamHandler()
@@ -87,12 +92,16 @@ def configure_handlers(logger, syslog=None, stderr=None, extended=False):
         if stderr != logging.NOTSET:
             stderr_handler.level = stderr
     if syslog is not None:
-        dev = syslog_path()
         cmd = os.path.basename(sys.argv[0])
         app = __main__.__name__
         app = cmd if app in ['__main__'] else app
         fmt = app + '[%(process)d]: %(name)s %(funcName)s %(message)s'
-        syslog_handler = logging.handlers.SysLogHandler(address=dev)
+        if server is not None:
+            address = server
+            fmt = ' '.join([socket.getfqdn(), fmt])
+        else:
+            address = syslog_path()
+        syslog_handler = logging.handlers.SysLogHandler(address=address)
         syslog_handler.setFormatter(logging.Formatter(fmt=fmt))
         if syslog != logging.NOTSET:
             syslog_handler.level = syslog
