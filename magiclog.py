@@ -25,7 +25,7 @@ def logger(ref=0):
     the modules' name; if it's a string, finds a logger of that name; if an
     integer, walks the stack to the module at that height.
 
-    The returned is always extended with a ``.configure()`` method allowing
+    The logger is always extended with a ``.configure()`` method allowing
     its log levels for syslog and stderr to be adjusted or automatically
     initialized as per the documentation for `configure()` below.
     """
